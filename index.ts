@@ -39,6 +39,8 @@ function writeFile(filePath: string, contents: string) {
 }
 
 function createRoutesFile(routesDirPath: string, handlers: Handler[]) {
+  const hasRoutesWithParams = handlers.some(h => !!h.params.length);
+
   const imports = `import type { ApiRouteProps } from 'sst/constructs';\n\n`;
 
   const routeMap = `const routeMap = {\n${handlers.reduce<string>(
@@ -104,17 +106,18 @@ routeConfig.config = function (route, configFn) {
   return this;
 };\n\n`;
 
-  const fileContents = ''.concat(
-    imports,
-    routeMap,
-    routeType,
-    paramRouteType,
-    routeParamsType,
-    eventWithPathParametersType,
-    getPathParametersFunction,
-    routeConfigType,
-    routeConfigBuild
-  );
+  const fileContents = ''.concat(imports, routeMap, routeType);
+
+  if (hasRoutesWithParams) {
+    fileContents.concat(
+      paramRouteType,
+      routeParamsType,
+      eventWithPathParametersType,
+      getPathParametersFunction
+    );
+  }
+
+  fileContents.concat(routeConfigType, routeConfigBuild);
 
   writeFile(path.join(routesDirPath, 'routes.ts'), fileContents);
 }
