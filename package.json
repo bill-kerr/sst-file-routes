@@ -1,6 +1,6 @@
 {
   "name": "sst-file-routes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Filed-based routing for SST applications.",
   "main": "index.js",
   "author": "Bill Kerr",
