@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-`sst-file-routes` is a work in progress. To work with it currently, you should be able to run `index.ts` with `ts-node` or another TypeScript runner.
+`sst-file-routes` is a work in progress. To work with it currently, you should be able to run it with `node ./node_modules/sst-file-routes/index.js {routesFolder}`.
 
 `npx ts-node ./node_modules/sst-file-routes/index.ts {routesFolder}` where `{routesFolder}` is the folder with all of your API routes and handlers.
 
