@@ -2,7 +2,9 @@
   "name": "sst-file-routes",
   "version": "0.0.10",
   "description": "Filed-based routing for SST applications.",
-  "bin": "./bin.js",
+  "bin": {
+    "sst-file-routes": "./bin.js"
+  },
   "author": "Bill Kerr",
   "license": "MIT",
   "scripts": {
