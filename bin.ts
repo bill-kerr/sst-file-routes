@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { isDir } from './util';
-import path from 'path';
-import fs from 'fs';
-import { Handler, isHandlerFile } from './handler';
+import { isDir } from "./util";
+import path from "path";
+import fs from "fs";
+import { Handler, isHandlerFile } from "./handler";
 
 /**
  * @returns The path to the routes folder.
@@ -11,7 +11,7 @@ import { Handler, isHandlerFile } from './handler';
 function getRoutesDirPath() {
   const arg = process.argv[2];
   if (!arg || arg.length < 1) {
-    throw new Error('No argument supplied for routes directory!');
+    throw new Error("No argument supplied for routes directory!");
   } else if (!isDir(arg)) {
     throw new Error(`Path ${arg} is not a directory.`);
   }
@@ -48,7 +48,7 @@ function createRoutesFile(routesDirPath: string) {
     handlers.push(new Handler(filePath, routesDirPath));
   }
 
-  const hasRoutesWithParams = handlers.some(h => !!h.params.length);
+  const hasRoutesWithParams = handlers.some((h) => !!h.params.length);
 
   const imports = `import type { ApiRouteProps } from 'sst/constructs';\n\n`;
 
@@ -56,10 +56,10 @@ function createRoutesFile(routesDirPath: string) {
     (acc, handler) =>
       acc.concat(
         `\t'${handler.pathString()}': { params: [${handler.params
-          .map(param => `'${param}'`)
-          .join(', ')}], path: '${handler.handlerPath}', },\n`
+          .map((param) => `'${param}'`)
+          .join(", ")}], path: '${handler.handlerPath}', },\n`
       ),
-    ''
+    ""
   )}} as const;\n\n`;
 
   const routeType = `export type Route = keyof typeof routeMap;\n\n`;
@@ -75,7 +75,7 @@ function createRoutesFile(routesDirPath: string) {
 }[R];\n\n`;
 
   const eventWithPathParametersType = `type EventWithPathParameters = {
-  pathParameters: {
+  pathParameters?: {
     [name: string]: string | undefined;
   };
 };\n\n`;
@@ -84,6 +84,10 @@ function createRoutesFile(routesDirPath: string) {
   route: R,
   event: EventWithPathParameters
 ): RouteParams<R> {
+  if (!event.pathParameters) {
+    throw new Error('No path parameters present!');
+  }
+
   const params: Record<string, string> = {};
   for (const param of routeMap[route].params) {
     if (event.pathParameters[param]) {
@@ -121,7 +125,7 @@ routeConfig.toConfig = function() {
   return this;
 };\n`;
 
-  let fileContents = ''.concat(imports, routeMap, routeType);
+  let fileContents = "".concat(imports, routeMap, routeType);
 
   if (hasRoutesWithParams) {
     fileContents = fileContents.concat(
@@ -134,7 +138,7 @@ routeConfig.toConfig = function() {
 
   fileContents = fileContents.concat(routeConfigType, routeConfigBuild);
 
-  writeFile(path.join(routesDirPath, 'routes.ts'), fileContents);
+  writeFile(path.join(routesDirPath, "routes.ts"), fileContents);
 }
 
 export function main() {
