@@ -2,9 +2,12 @@
   "name": "sst-file-routes",
   "version": "0.0.7",
   "description": "Filed-based routing for SST applications.",
-  "main": "index.js",
+  "bin": "./bin.js",
   "author": "Bill Kerr",
   "license": "MIT",
+  "scripts": {
+    "build": "npx tsc"
+  },
   "peerDependencies": {
     "sst": "^2.0.0"
   },

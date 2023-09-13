@@ -1,7 +1,7 @@
-import { Handler, isHandlerFile } from './handler';
 import { isDir } from './util';
-import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
+import fs from 'fs';
+import { Handler, isHandlerFile } from './handler';
 
 /**
  * @returns The path to the routes folder.
@@ -38,7 +38,14 @@ function writeFile(filePath: string, contents: string) {
   fs.writeFileSync(filePath, contents);
 }
 
-function createRoutesFile(routesDirPath: string, handlers: Handler[]) {
+function createRoutesFile(routesDirPath: string) {
+  const handlerFilePaths = getHandlerFilePaths(routesDirPath);
+
+  const handlers: Handler[] = [];
+  for (const filePath of handlerFilePaths) {
+    handlers.push(new Handler(filePath, routesDirPath));
+  }
+
   const hasRoutesWithParams = handlers.some(h => !!h.params.length);
 
   const imports = `import type { ApiRouteProps } from 'sst/constructs';\n\n`;
@@ -122,16 +129,9 @@ routeConfig.config = function (route, configFn) {
   writeFile(path.join(routesDirPath, 'routes.ts'), fileContents);
 }
 
-function main() {
+export function main() {
   const routesDirPath = getRoutesDirPath();
-  const handlerFilePaths = getHandlerFilePaths(routesDirPath);
-
-  const handlers: Handler[] = [];
-  for (const filePath of handlerFilePaths) {
-    handlers.push(new Handler(filePath, routesDirPath));
-  }
-
-  createRoutesFile(routesDirPath, handlers);
+  createRoutesFile(routesDirPath);
 }
 
 main();
