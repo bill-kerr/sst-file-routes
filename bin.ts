@@ -99,10 +99,11 @@ function createRoutesFile(routesDirPath: string) {
 }\n\n`;
 
   const routeConfigType = `type RouteConfig = Record<Route, ApiRouteProps<string>> & {
-  config(
+  route(
     route: Route,
     configFn: (current: ApiRouteProps<string>) => ApiRouteProps<string>,
   ): RouteConfig;
+  toConfig(): Record<Route, ApiRouteProps<string>>;
 };\n\n`;
 
   const routeConfigBuild = `export const routeConfig: RouteConfig = {} as RouteConfig;
@@ -110,10 +111,15 @@ for (const [name, { path }] of Object.entries(routeMap)) {
   routeConfig[name as Route] = path;
 }
 
-routeConfig.config = function (route, configFn) {
+routeConfig.route = function (route, configFn) {
   this[route] = configFn(this[route]);
   return this;
-};\n\n`;
+};
+
+routeConfig.toConfig = function() {
+  delete this.config;
+  return this;
+};\n`;
 
   let fileContents = ''.concat(imports, routeMap, routeType);
 
