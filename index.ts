@@ -106,10 +106,10 @@ routeConfig.config = function (route, configFn) {
   return this;
 };\n\n`;
 
-  const fileContents = ''.concat(imports, routeMap, routeType);
+  let fileContents = ''.concat(imports, routeMap, routeType);
 
   if (hasRoutesWithParams) {
-    fileContents.concat(
+    fileContents = fileContents.concat(
       paramRouteType,
       routeParamsType,
       eventWithPathParametersType,
@@ -117,7 +117,7 @@ routeConfig.config = function (route, configFn) {
     );
   }
 
-  fileContents.concat(routeConfigType, routeConfigBuild);
+  fileContents = fileContents.concat(routeConfigType, routeConfigBuild);
 
   writeFile(path.join(routesDirPath, 'routes.ts'), fileContents);
 }
