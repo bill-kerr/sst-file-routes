@@ -28,8 +28,11 @@ export class Handler {
   public readonly params: string[] = [];
   public readonly method: HandlerMethod;
 
-  constructor(filePath: string) {
+  private readonly rootPath: string;
+
+  constructor(filePath: string, rootPath: string) {
     this.filePath = filePath;
+    this.rootPath = rootPath;
 
     /**
      * Set the handler path.
@@ -68,12 +71,10 @@ export class Handler {
   }
 
   public pathString(): string {
-    const lastSlashPosition = this.handlerPath.lastIndexOf('/');
-    const slashCount = getSlashCount(this.handlerPath);
+    const urlPath = this.handlerPath.replace(this.rootPath, '');
+    const lastSlashPosition = urlPath.lastIndexOf('/');
+    const slashCount = getSlashCount(urlPath);
     const sliceOffset = slashCount === 1 ? 1 : 0;
-    return `${this.method} ${this.handlerPath.slice(
-      this.handlerPath.indexOf('/'),
-      lastSlashPosition + sliceOffset
-    )}`;
+    return `${this.method} ${urlPath.slice(urlPath.indexOf('/'), lastSlashPosition + sliceOffset)}`;
   }
 }

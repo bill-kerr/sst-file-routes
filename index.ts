@@ -128,7 +128,7 @@ function main() {
 
   const handlers: Handler[] = [];
   for (const filePath of handlerFilePaths) {
-    handlers.push(new Handler(filePath));
+    handlers.push(new Handler(filePath, routesDirPath));
   }
 
   createRoutesFile(routesDirPath, handlers);
