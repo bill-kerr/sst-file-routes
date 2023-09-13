@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { isDir } from './util';
 import path from 'path';
 import fs from 'fs';
