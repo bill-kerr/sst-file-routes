@@ -4,18 +4,34 @@
 
 ## Getting Started
 
-`sst-file-routes` is a work in progress. To work with it currently, you should be able to run it with `node ./node_modules/sst-file-routes/index.js {routesFolder}`.
+The easiest way to get started is via NPX: `npx sst-file-routes routes`
 
-`npx ts-node ./node_modules/sst-file-routes/index.ts {routesFolder}` where `{routesFolder}` is the folder with all of your API routes and handlers.
+This command assumes you have a `routes` directory with your SST API handlers. If your handlers are in a different file, replace `routes` with the relative path to the correct directory.
 
-The script will generate a `routes.ts` file inside of your routes folder. You can then import the `routeConfig` object from that file and pass it directly to the `routes` config property of your API construct config.
+A file called `routes.ts` will be created inside of the specified directory.
 
 ## Conventions
 
-To generate a handler for the route `GET /test/one`, create a file named `get.ts` inside of `/{routeFolder}/test/one`.
+The following conventions assume your API routes are in a `routes` directory.
 
-For routes with path parameters, use curly braces in the folder names. For instance, `POST /users/{id}` would be `/{routeFolder}/users/{id}/post.ts`.
+To generate a handler for the route `GET /healthcheck`, create a file named `get.ts` inside of `/routes/healthcheck`.
+
+For routes with path parameters, use curly braces in the folder names. For instance, to create the `POST /users/{userId}` route, you would create a `/routes/users/{userId}/post.ts`.
 
 Your handler must be exported as `handler`. `export const handler = () => {}`;
 
-## Configuration
+## Getting Path Parameters
+
+If a route in your application has a path parameter, a `getPathParameters` function will be exported from `routes.ts`. This function will give you nice autocomplete based on the files in your routes directory.
+
+```ts
+const { userId } = getPathParameters("POST /users/{userId}");
+```
+
+## Roadmap
+
+Features to come:
+
+- fallback route (`$default.ts`)
+- queue and cron function conventions
+- watch mode

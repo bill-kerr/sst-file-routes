@@ -1,4 +1,3 @@
-import * as path from "path";
 import { getSlashCount } from "./util";
 
 const handlerFileNames = new Set([
