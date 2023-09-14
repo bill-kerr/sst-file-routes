@@ -20,6 +20,23 @@ For routes with path parameters, use curly braces in the folder names. For insta
 
 Your handler must be exported as `handler`. `export const handler = () => {}`;
 
+```text
+└── routes
+    ├── get.ts
+    └── users
+        ├── post.ts
+        └── {userId}
+            ├── get.ts
+```
+
+The above folder structure would produce the following route configuation:
+
+```text
+GET  /
+POST /users
+GET  /users/{userId}
+```
+
 ## Getting Path Parameters
 
 If a route in your application has a path parameter, a `getPathParameters` function will be exported from `routes.ts`. This function will give you nice autocomplete based on the files in your routes directory.
