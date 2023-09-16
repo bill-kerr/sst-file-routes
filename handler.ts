@@ -25,7 +25,7 @@ export function isHandlerFile(fileName: string): fileName is HandlerFileName {
 const handlerMethods = new Set(["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"] as const);
 export type HandlerMethod = typeof handlerMethods extends Set<infer R> ? R : never;
 
-export function isHandlerMethod(method: string): method is HandlerMethod {
+function isHandlerMethod(method: string): method is HandlerMethod {
 	return handlerMethods.has(method as HandlerMethod);
 }
 
@@ -34,12 +34,14 @@ export class Handler {
 	public readonly handlerPath: string;
 	public readonly params: string[] = [];
 	public readonly method: HandlerMethod;
+	public readonly isDefaultHandler: boolean;
 
 	private readonly rootPath: string;
 
 	constructor(filePath: string, rootPath: string) {
 		this.filePath = filePath;
 		this.rootPath = rootPath;
+		this.isDefaultHandler = filePath.endsWith("$default.ts");
 
 		/**
 		 * Set the handler path.
@@ -52,10 +54,14 @@ export class Handler {
 		const method = this.handlerPath
 			.slice(this.handlerPath.lastIndexOf("/") + 1, this.handlerPath.length - 8)
 			.toUpperCase();
-		if (!isHandlerMethod(method)) {
+		if (!isHandlerMethod(method) && this.isDefaultHandler) {
+			// Doesn't matter what this is, it won't be used.
+			this.method = "GET";
+		} else if (isHandlerMethod(method)) {
+			this.method = method;
+		} else {
 			throw new Error(`Invalid handler file method: ${method}`);
 		}
-		this.method = method;
 
 		/**
 		 * Parse out handler path parameters.
@@ -75,6 +81,10 @@ export class Handler {
 	}
 
 	public pathString(): string {
+		if (this.isDefaultHandler) {
+			return "$default";
+		}
+
 		const urlPath = this.handlerPath.replace(this.rootPath, "");
 		const lastSlashPosition = urlPath.lastIndexOf("/");
 		const slashCount = getSlashCount(urlPath);

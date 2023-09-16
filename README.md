@@ -89,10 +89,24 @@ If a route in your application has a path parameter, a `getPathParameters` funct
 const { userId } = getPathParameters("POST /users/{userId}");
 ```
 
+## Creating a catch-all route
+
+[SST has support for a catch-all route](https://docs.sst.dev/apis#catch-all-routes). To create a catch-all route, create a `$default.ts` handler file in the root routes directory.
+
+```text
+└── routes
+    ├── $default.ts // This handler file will create a catch-all route.
+    ├── get.ts
+    └── users
+        ├── post.ts
+        └── {userId}
+            ├── get.ts
+```
+
 ## Roadmap
 
 Features to come:
 
-- fallback route (`$default.ts`)
 - queue and cron function conventions
 - watch mode
+- better CLI

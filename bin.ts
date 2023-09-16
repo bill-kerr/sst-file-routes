@@ -38,14 +38,14 @@ function isDirectory(targetPath: string): boolean {
 /**
  * Recursively returns all handler file paths in a given directory.
  */
-function getHandlerFilePaths(baseDir: string): string[] {
+function getHandlerFilePaths(baseDir: string, depth: number): string[] {
 	const filePaths: string[] = [];
 	const items = readDirectory(baseDir);
 
 	for (const item of items) {
 		if (isDirectory(path.join(baseDir, item))) {
-			filePaths.push(...getHandlerFilePaths(path.join(baseDir, item)));
-		} else if (isHandlerFile(item)) {
+			filePaths.push(...getHandlerFilePaths(path.join(baseDir, item), depth + 1));
+		} else if (isHandlerFile(item) || (depth === 0 && item === "$default.ts")) {
 			filePaths.push(normalizePath(path.join(baseDir, item)));
 		}
 	}
@@ -63,7 +63,7 @@ function readDirectory(location: string): string[] {
 
 export function main() {
 	const routesDirPath = getRoutesDirPath();
-	const handlerFilePaths = getHandlerFilePaths(routesDirPath);
+	const handlerFilePaths = getHandlerFilePaths(routesDirPath, 0);
 	const fileContents = createRoutesFile(routesDirPath, handlerFilePaths);
 	writeFile(path.join(routesDirPath, "routes.ts"), fileContents);
 }

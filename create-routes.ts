@@ -61,7 +61,7 @@ routeConfig.route = function (route, configFn) {
 };
 
 routeConfig.toConfig = function() {
-  delete this.config;
+  delete this.route;
   return this;
 };\n`;
 
