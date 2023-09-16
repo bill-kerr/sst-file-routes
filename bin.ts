@@ -64,6 +64,10 @@ function readDirectory(location: string): string[] {
 export function main() {
 	const routesDirPath = getRoutesDirPath();
 	const handlerFilePaths = getHandlerFilePaths(routesDirPath, 0);
+	if (handlerFilePaths.length <= 0) {
+		throw new Error(`No valid routes found in ${routesDirPath}!`);
+	}
+
 	const fileContents = createRoutesFile(routesDirPath, handlerFilePaths);
 	writeFile(path.join(routesDirPath, "routes.ts"), fileContents);
 }
