@@ -1,6 +1,6 @@
 {
   "name": "sst-file-routes",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Filed-based routing for SST applications.",
   "bin": {
     "sst-file-routes": "bin.js"
