@@ -43,11 +43,11 @@ const getPathParametersFunction = `export function getPathParameters<R extends P
 }\n\n`;
 
 const routeConfigType = `type RouteConfig = Record<Route, ApiRouteProps<string>> & {
-  route(
+  configureRoute(
     route: Route,
     configFn: (current: ApiRouteProps<string>) => ApiRouteProps<string>,
   ): RouteConfig;
-  toConfig(): Record<Route, ApiRouteProps<string>>;
+  routes(): Record<Route, ApiRouteProps<string>>;
 };\n\n`;
 
 const routeConfigBuild = `export const routeConfig: RouteConfig = {} as RouteConfig;
@@ -55,12 +55,12 @@ for (const [name, { path }] of Object.entries(routes)) {
   routeConfig[name as Route] = path;
 }
 
-routeConfig.route = function (route, configFn) {
+routeConfig.configureRoute = function (route, configFn) {
   this[route] = configFn(this[route]);
   return this;
 };
 
-routeConfig.toConfig = function() {
+routeConfig.routes = function() {
   delete this.route;
   return this;
 };\n`;
