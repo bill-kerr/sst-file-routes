@@ -66,22 +66,24 @@ routeConfig.toConfig = function() {
 };\n`;
 
 export function createRoutesFile(baseDirectory: string, handlerFilePaths: string[]): string {
+	let hasRoutesWithParams = false;
 	const handlers: Handler[] = [];
+	let routes = "const routes = {";
+
 	for (const filePath of handlerFilePaths) {
-		handlers.push(new Handler(filePath, baseDirectory));
+		const handler = new Handler(filePath, baseDirectory);
+		if (handler.params.length) {
+			hasRoutesWithParams = true;
+		}
+
+		routes = `${routes}\n\t'${handler.pathString()}': { params: [${handler.params
+			.map((param) => `'${param}'`)
+			.join(", ")}], path: '${handler.handlerPath}' },`;
+
+		handlers.push(handler);
 	}
 
-	const hasRoutesWithParams = handlers.some((h) => !!h.params.length);
-
-	const routes = `const routes = {\n${handlers.reduce<string>(
-		(acc, handler) =>
-			acc.concat(
-				`\t'${handler.pathString()}': { params: [${handler.params
-					.map((param) => `'${param}'`)
-					.join(", ")}], path: '${handler.handlerPath}', },\n`,
-			),
-		"",
-	)}} as const;\n\n`;
+	routes = `${routes}\n} as const;\n\n`;
 
 	let fileContents = "".concat(imports, routes, routeType);
 
