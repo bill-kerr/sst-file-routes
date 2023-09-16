@@ -1,4 +1,12 @@
-import { getSlashCount } from "./util";
+function getSlashCount(str: string): number {
+	let count = 0;
+	for (let i = 0; i < str.length; i++) {
+		if (str[i] === "/") {
+			count++;
+		}
+	}
+	return count;
+}
 
 const handlerFileNames = new Set([
 	"get.ts",
@@ -31,15 +39,12 @@ export class Handler {
 
 	constructor(filePath: string, rootPath: string) {
 		this.filePath = filePath;
-		this.rootPath = rootPath.replace(/[\/\\]/g, "/");
+		this.rootPath = rootPath;
 
 		/**
 		 * Set the handler path.
 		 */
-		this.handlerPath = this.filePath
-			.slice(0, this.filePath.length - 3)
-			.replace(/[\/\\]/g, "/")
-			.concat(".handler");
+		this.handlerPath = this.filePath.slice(0, this.filePath.length - 3).concat(".handler");
 
 		/**
 		 * Set the handler method.

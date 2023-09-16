@@ -4,7 +4,11 @@
 
 ## Getting Started
 
-The easiest way to get started is via NPX: `npx sst-file-routes routes`
+The easiest way to get started is via NPX.
+
+```bash
+npx sst-file-routes routes
+```
 
 This command assumes you have a `routes` directory with your SST API handlers. If your handlers are in a different file, replace `routes` with the relative path to the correct directory.
 
