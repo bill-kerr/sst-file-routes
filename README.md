@@ -20,7 +20,7 @@ The following conventions assume your API routes are in a `routes` directory.
 
 To generate a handler for the route `GET /healthcheck`, create a file named `get.ts` inside of `/routes/healthcheck`.
 
-For routes with path parameters, use curly braces in the folder names. For instance, to create the `POST /users/{userId}` route, you would create a `/routes/users/{userId}/post.ts`.
+For routes with path parameters, use curly braces in the folder names. For instance, to create the `GET /users/{userId}` route, you would create a `/routes/users/{userId}/get.ts`.
 
 Your handler must be exported as `handler`. `export const handler = () => {}`;
 
@@ -86,7 +86,7 @@ routeConfig
 If a route in your application has a path parameter, a `getPathParameters` function will be exported from `routes.ts`. This function will give you nice autocomplete based on the files in your routes directory.
 
 ```ts
-const { userId } = getPathParameters("POST /users/{userId}");
+const { userId } = getPathParameters("GET /users/{userId}", event);
 ```
 
 ## Creating a catch-all route
