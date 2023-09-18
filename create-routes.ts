@@ -60,9 +60,14 @@ routeConfig.configureRoute = function (route, configFn) {
   return this;
 };
 
-routeConfig.routes = function() {
-  delete this.route;
-  return this;
+routeConfig.routes = function () {
+  const config: Record<string, ApiRouteProps<string>> = {};
+  for (const [key, val] of Object.entries(this)) {
+    if (key !== 'routes' && key !== 'configureRoute') {
+      config[key] = val as ApiRouteProps<string>;
+    }
+  }
+  return config;
 };\n`;
 
 export function createRoutesFile(baseDirectory: string, handlerFilePaths: string[]): string {
